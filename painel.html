@@ -11,8 +11,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background: #020617; color: #f8fafc; }
         .admin-card { background: #0f172a; border-radius: 30px; border: 1px solid #1e293b; padding: 25px; }
+        .stat-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; }
         .status-badge { font-[900] text-[8px] uppercase px-2 py-1 rounded-lg italic; }
-        #lockScreen { position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; align-items: center; justify-content: center; p: 20px; }
+        #lockScreen { position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -20,67 +21,71 @@
     <div id="lockScreen">
         <div class="w-full max-w-sm text-center">
             <h1 class="text-2xl font-black italic text-[#0052FF] mb-6">SISTEMA <span class="text-white">BLOQUEADO</span></h1>
-            <input type="password" id="masterKey" placeholder="Insira a Chave de Acesso" class="w-full p-5 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-center outline-none focus:border-blue-500 text-white mb-4">
-            <button onclick="checkLock()" class="w-full bg-blue-600 p-5 rounded-2xl font-black uppercase italic hover:bg-blue-700 transition-all">Desbloquear Painel</button>
+            <input type="password" id="masterKey" placeholder="Chave de Acesso" class="w-full p-5 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-center outline-none text-white mb-4">
+            <button onclick="checkLock()" class="w-full bg-blue-600 p-5 rounded-2xl font-black uppercase italic">Desbloquear</button>
         </div>
     </div>
 
     <div id="mainContent" style="display: none;">
-        <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6 border-b border-slate-800 pb-8 text-center md:text-left">
+        <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6 border-b border-slate-800 pb-8">
             <div>
-                <h1 class="text-3xl font-black italic tracking-tighter uppercase text-[#0052FF]">SAFE<span class="text-white">CONTROL</span> <span class="text-[10px] bg-red-600 text-white px-2 py-1 rounded ml-2 italic text-center">MASTER</span></h1>
-                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em] italic">Gestão de Ativos SafeKwanza</p>
+                <h1 class="text-3xl font-black italic tracking-tighter uppercase text-[#0052FF]">SAFE<span class="text-white">CONTROL</span></h1>
+                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em] italic">Gestão Central de Ativos</p>
             </div>
-            <button onclick="location.reload()" class="bg-slate-800 px-6 py-3 rounded-2xl text-[10px] font-black uppercase italic hover:bg-slate-700 transition-all">Atualizar Painel</button>
+            <button onclick="location.reload()" class="bg-slate-800 px-6 py-3 rounded-2xl text-[10px] font-black uppercase italic">Atualizar Dados</button>
         </header>
+
+        <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <div class="stat-card p-6 rounded-[30px]">
+                <p class="text-[8px] font-black text-slate-500 uppercase italic">Total Usuários</p>
+                <p id="statTotalUsers" class="text-3xl font-black text-white italic">0</p>
+            </div>
+            <div class="stat-card p-6 rounded-[30px]">
+                <p class="text-[8px] font-black text-blue-500 uppercase italic">Saldo em Sistema</p>
+                <p id="statTotalBalance" class="text-xl font-black text-white italic">0 Kz</p>
+            </div>
+            <div class="stat-card p-6 rounded-[30px]">
+                <p class="text-[8px] font-black text-emerald-500 uppercase italic">Rendimento/Dia</p>
+                <p id="statTotalDaily" class="text-xl font-black text-white italic">0 Kz</p>
+            </div>
+            <div class="stat-card p-6 rounded-[30px]">
+                <p class="text-[8px] font-black text-red-500 uppercase italic">Contas Banidas</p>
+                <p id="statBanned" class="text-3xl font-black text-white italic">0</p>
+            </div>
+        </div>
 
         <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
                 <div class="admin-card">
-                    <h3 class="text-[10px] font-black uppercase text-blue-400 mb-6 italic tracking-widest">Pesquisar Terminal</h3>
+                    <h3 class="text-[10px] font-black uppercase text-blue-400 mb-6 italic tracking-widest">Buscar Terminal</h3>
                     <div class="flex gap-2 mb-6">
-                        <input type="tel" id="searchPhone" placeholder="Terminal (9xxxxxxxx)" class="flex-1 p-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-sm outline-none focus:border-blue-500 text-white">
-                        <button onclick="searchUser()" class="bg-blue-600 px-5 rounded-2xl hover:bg-blue-700 transition-all text-white font-bold">BUSCAR</button>
+                        <input type="tel" id="searchPhone" placeholder="9xxxxxxxx" class="flex-1 p-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-sm text-white outline-none">
+                        <button onclick="searchUser()" class="bg-blue-600 px-5 rounded-2xl font-bold">BUSCAR</button>
                     </div>
 
                     <div id="userProfile" class="hidden space-y-5">
-                        <div class="p-5 bg-black/40 rounded-2xl border border-slate-800">
+                        <div class="p-5 bg-black/40 rounded-2xl border border-slate-800 text-center">
                             <p id="uStatus" class="font-black italic text-[10px] uppercase mb-4"></p>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="text-[8px] font-black text-slate-500 uppercase mb-1 italic">Palavra-Passe:</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="uPassView" class="w-full p-2 text-xs font-mono font-black rounded-lg border-none bg-slate-800 text-white">
-                                        <button onclick="updatePass()" class="bg-blue-600 text-[8px] font-black px-3 rounded-lg uppercase">Alterar</button>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-end border-t border-slate-800 pt-4">
-                                    <div>
-                                        <p class="text-[8px] font-black text-slate-500 uppercase">Saldo Atual</p>
-                                        <p id="uBalance" class="text-2xl font-black italic text-white">0,00 Kz</p>
-                                    </div>
-                                    <button id="banBtn" onclick="toggleBan()" class="text-[8px] font-black px-4 py-2 rounded-xl uppercase"></button>
-                                </div>
-                            </div>
+                            <p id="uBalance" class="text-3xl font-black italic text-white mb-4">0,00 Kz</p>
+                            <button id="banBtn" onclick="toggleBan()" class="w-full text-[8px] font-black px-4 py-3 rounded-xl uppercase"></button>
                         </div>
-
                         <div class="space-y-2">
-                            <input type="number" id="admAmount" placeholder="Valor (Kz)" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-sm text-white">
+                            <p class="text-[8px] font-black text-slate-500 uppercase italic">Ajustar Saldo:</p>
+                            <input type="number" id="admAmount" placeholder="Valor" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-white">
                             <div class="grid grid-cols-2 gap-2">
-                                <button onclick="adjustBalance('add')" class="bg-emerald-600 p-3 rounded-xl font-black text-[9px] uppercase italic">Add Saldo</button>
+                                <button onclick="adjustBalance('add')" class="bg-emerald-600 p-3 rounded-xl font-black text-[9px] uppercase italic">Adicionar</button>
                                 <button onclick="adjustBalance('rem')" class="bg-red-600 p-3 rounded-xl font-black text-[9px] uppercase italic">Remover</button>
                             </div>
                         </div>
                     </div>
-                    <div id="noUser" class="py-12 text-center text-slate-600 italic text-xs uppercase font-black">Aguardando Terminal...</div>
                 </div>
             </div>
 
             <div class="lg:col-span-8">
-                <div class="admin-card min-h-[500px]">
+                <div class="admin-card min-h-[400px]">
                     <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
-                        <h2 class="text-[11px] font-black uppercase italic tracking-widest text-white">Pedidos Pendentes</h2>
-                        <span id="pendingCount" class="bg-blue-600 text-[9px] font-black px-4 py-1 rounded-full uppercase italic">0 Pedidos</span>
+                        <h2 class="text-[11px] font-black uppercase italic text-white">Pedidos em Espera</h2>
+                        <span id="pendingCount" class="bg-blue-600 text-[9px] font-black px-4 py-1 rounded-full uppercase italic">0</span>
                     </div>
                     <div id="adminQueue" class="space-y-4"></div>
                 </div>
@@ -88,23 +93,14 @@
         </main>
     </div>
 
-    <div id="photoModal" onclick="this.style.display='none'" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9999; align-items:center; justify-content:center; padding:20px; cursor:pointer;">
-        <img id="imgFull" src="" style="max-width:100%; max-height:85vh; border:3px solid #0052FF; border-radius:20px;">
-    </div>
-
     <script>
-        // SISTEMA DE SEGURANÇA
         function checkLock() {
-            const key = document.getElementById('masterKey').value;
-            if(key === "ABS..943") {
+            if(document.getElementById('masterKey').value === "ABS..943") {
                 document.getElementById('lockScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-            } else {
-                alert("CHAVE DE ACESSO INCORRETA!");
-            }
+            } else { alert("ACESSO NEGADO"); }
         }
 
-        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyC3SurEz7aLcHG4yBUq5zrGBPOb2mvLpZ4",
             authDomain: "fir-6e9ec.firebaseapp.com",
@@ -122,45 +118,28 @@
 
         db.ref('users').on('value', (snapshot) => {
             allUsers = snapshot.val() || {};
+            calculateStats();
             renderQueue();
             if(selectedUserPhone) updateProfileView();
         });
 
-        function searchUser() {
-            const phone = document.getElementById('searchPhone').value;
-            if(!allUsers[phone]) return alert("Usuário não encontrado!");
-            selectedUserPhone = phone;
-            updateProfileView();
-        }
+        function calculateStats() {
+            const phones = Object.keys(allUsers);
+            let totalBalance = 0;
+            let totalDaily = 0;
+            let bannedCount = 0;
 
-        function updateProfileView() {
-            const u = allUsers[selectedUserPhone];
-            document.getElementById('noUser').classList.add('hidden');
-            document.getElementById('userProfile').classList.remove('hidden');
-            const uStatus = document.getElementById('uStatus');
-            uStatus.innerText = u.isBanned ? "CONTA BLOQUEADA" : "CONTA ATIVA";
-            uStatus.className = `font-black italic text-[10px] uppercase ${u.isBanned ? 'text-red-500' : 'text-emerald-500'}`;
-            const bBtn = document.getElementById('banBtn');
-            bBtn.innerText = u.isBanned ? "DESBLOQUEAR" : "BANIR CONTA";
-            bBtn.className = u.isBanned ? "bg-emerald-600 text-white text-[8px] font-black px-4 py-2 rounded-xl uppercase shadow-lg" : "bg-red-600/20 text-red-500 border border-red-500/30 text-[8px] font-black px-4 py-2 rounded-xl uppercase";
-            document.getElementById('uPassView').value = u.pass;
-            document.getElementById('uBalance').innerText = (u.balance || 0).toLocaleString('pt-AO', {minimumFractionDigits: 2}) + " Kz";
-        }
-
-        function adjustBalance(type) {
-            const valInput = document.getElementById('admAmount');
-            const val = parseFloat(valInput.value);
-            if (!val || val <= 0) return alert("Insira um valor válido.");
-            const currentBalance = parseFloat(allUsers[selectedUserPhone].balance) || 0;
-            const newBalance = type === 'add' ? currentBalance + val : currentBalance - val;
-            db.ref(`users/${selectedUserPhone}/balance`).set(newBalance).then(() => {
-                const hId = "adm" + Date.now();
-                db.ref(`users/${selectedUserPhone}/history/${hId}`).set({
-                    type: 'Ajuste Master', val: val, date: new Date().toLocaleString(), status: 'CONCLUÍDO'
-                });
-                valInput.value = "";
-                alert("Carteira Atualizada!");
+            phones.forEach(p => {
+                const u = allUsers[p];
+                totalBalance += (u.balance || 0);
+                totalDaily += (u.dailyIncome || 0);
+                if(u.isBanned) bannedCount++;
             });
+
+            document.getElementById('statTotalUsers').innerText = phones.length;
+            document.getElementById('statTotalBalance').innerText = totalBalance.toLocaleString() + " Kz";
+            document.getElementById('statTotalDaily').innerText = totalDaily.toLocaleString() + " Kz";
+            document.getElementById('statBanned').innerText = bannedCount;
         }
 
         function renderQueue() {
@@ -173,56 +152,61 @@
                     if(op.status === 'PENDENTE' || op.status === 'PROCESSANDO') pendingList.push({ ...op, phone, hId });
                 });
             });
-            document.getElementById('pendingCount').innerText = `${pendingList.length} Pendentes`;
+
+            document.getElementById('pendingCount').innerText = pendingList.length;
             if(pendingList.length === 0) {
-                queue.innerHTML = `<div class="text-center py-20 text-slate-600 italic text-xs font-black uppercase">Nenhum pedido pendente.</div>`;
+                queue.innerHTML = `<div class="text-center py-20 text-slate-600 italic text-xs font-black uppercase">Fila Vazia</div>`;
                 return;
             }
+
             queue.innerHTML = pendingList.map(op => `
-                <div class="bg-slate-900/60 p-6 rounded-[35px] border border-slate-800 flex flex-col md:flex-row justify-between gap-6 shadow-2xl">
+                <div class="bg-slate-900/60 p-6 rounded-[35px] border border-slate-800 flex flex-col md:flex-row justify-between gap-6">
                     <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="status-badge ${op.type.includes('Depósito') ? 'bg-emerald-400/10 text-emerald-400' : 'bg-red-400/10 text-red-400'}">${op.type}</span>
-                            <span class="text-[9px] text-slate-500 font-bold">${op.date}</span>
-                        </div>
+                        <span class="status-badge ${op.type.includes('Depósito') ? 'bg-emerald-400/10 text-emerald-400' : 'bg-red-400/10 text-red-400'}">${op.type}</span>
                         <p class="text-3xl font-black italic text-white">${op.val.toLocaleString()} Kz</p>
-                        <p class="text-[9px] font-bold text-blue-500 uppercase mt-2 italic">Terminal: ${op.phone}</p>
-                        ${op.proof ? `<button onclick="showPhoto('${op.proof}')" class="mt-4 w-full bg-blue-600/10 text-blue-400 border border-blue-400/30 p-4 rounded-2xl text-[9px] font-black uppercase italic">Ver Comprovativo</button>` : ''}
+                        <p class="text-[9px] font-bold text-blue-500 uppercase italic">Terminal: ${op.phone}</p>
+                        ${op.type.includes('Saque') ? `<p class="mt-2 text-xs font-mono text-white bg-red-600/10 p-2 rounded-xl">IBAN: ${op.iban || 'ERRO'}</p>` : ''}
                     </div>
-                    <div class="flex flex-row md:flex-col gap-2">
-                        <button onclick="approveOp('${op.phone}', '${op.hId}')" class="flex-1 bg-emerald-600 px-8 py-4 rounded-2xl font-black text-[10px] uppercase italic">Aprovar</button>
-                        <button onclick="rejectOp('${op.phone}', '${op.hId}')" class="flex-1 bg-red-600/20 text-red-500 border border-red-500/30 px-8 py-4 rounded-2xl font-black text-[10px] uppercase italic">Rejeitar</button>
+                    <div class="flex gap-2">
+                        <button onclick="approveOp('${op.phone}', '${op.hId}')" class="bg-emerald-600 px-6 py-3 rounded-xl font-black text-[10px] uppercase">OK</button>
+                        <button onclick="rejectOp('${op.phone}', '${op.hId}')" class="bg-red-600/20 text-red-500 border border-red-500/30 px-6 py-3 rounded-xl font-black text-[10px] uppercase">X</button>
                     </div>
                 </div>
             `).join('');
         }
 
+        // Funções de Ação
+        function searchUser() {
+            const p = document.getElementById('searchPhone').value;
+            if(!allUsers[p]) return alert("Não encontrado");
+            selectedUserPhone = p;
+            updateProfileView();
+        }
+        function updateProfileView() {
+            const u = allUsers[selectedUserPhone];
+            document.getElementById('userProfile').classList.remove('hidden');
+            document.getElementById('uBalance').innerText = u.balance.toLocaleString() + " Kz";
+            const bBtn = document.getElementById('banBtn');
+            bBtn.innerText = u.isBanned ? "DESBLOQUEAR" : "BANIR CONTA";
+            bBtn.className = u.isBanned ? "w-full bg-emerald-600 font-black px-4 py-3 rounded-xl text-white" : "w-full bg-red-600/20 text-red-500 border border-red-500/30 font-black px-4 py-3 rounded-xl";
+        }
+        function adjustBalance(type) {
+            const val = parseFloat(document.getElementById('admAmount').value);
+            if(!val) return;
+            const newBal = type === 'add' ? allUsers[selectedUserPhone].balance + val : allUsers[selectedUserPhone].balance - val;
+            db.ref(`users/${selectedUserPhone}/balance`).set(newBal);
+        }
         function approveOp(phone, hId) {
             const op = allUsers[phone].history[hId];
-            let balance = parseFloat(allUsers[phone].balance) || 0;
-            if(op.type.includes('Depósito')) balance += op.val;
-            db.ref(`users/${phone}/balance`).set(balance);
+            if(op.type.includes('Depósito')) db.ref(`users/${phone}/balance`).set(allUsers[phone].balance + op.val);
             db.ref(`users/${phone}/history/${hId}/status`).set('CONCLUÍDO');
         }
-
         function rejectOp(phone, hId) {
             const op = allUsers[phone].history[hId];
-            let balance = parseFloat(allUsers[phone].balance) || 0;
-            if(op.type.includes('Saque')) balance += (op.bruto || op.val);
-            db.ref(`users/${phone}/balance`).set(balance);
+            if(op.type.includes('Saque')) db.ref(`users/${phone}/balance`).set(allUsers[phone].balance + op.val);
             db.ref(`users/${phone}/history/${hId}/status`).set('REJEITADO');
         }
-
         function toggleBan() { db.ref(`users/${selectedUserPhone}/isBanned`).set(!allUsers[selectedUserPhone].isBanned); }
-        function updatePass() {
-            const pass = document.getElementById('uPassView').value;
-            if(pass.length < 4) return alert("Senha curta!");
-            db.ref(`users/${selectedUserPhone}/pass`).set(pass).then(() => alert("Senha Atualizada!"));
-        }
-        function showPhoto(b64) {
-            document.getElementById('imgFull').src = b64;
-            document.getElementById('photoModal').style.display = 'flex';
-        }
     </script>
 </body>
-                </html>
+</html>
